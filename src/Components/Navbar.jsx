@@ -1,58 +1,206 @@
-import React, { useState } from "react";
+
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../Context/AuthContext";
 import { Link, NavLink } from "react-router-dom";
+import { HiMoon } from "react-icons/hi2";
+import { HiOutlineMoon } from "react-icons/hi2";
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
 
-  // Fake logged-in user (later AuthContext থেকে আসবে)
-  const fakeUser = {
-    displayName: "Demo User",
-    photoURL: "https://i.ibb.co/4pDNDk1/avatar.png"
+const Navbar = () => {
+  const { user, loading, logoutUser } = useContext(AuthContext);
+  const {menuOpen, setMenuOpen}= useState(false);
+
+  // Theme State
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  const handleThemeToggle = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
   };
 
-  const navLinks = (
-    <>
-      <NavLink to="/" className="px-4 py-2">Home</NavLink>
-      <NavLink to="/all-contests" className="px-4 py-2">All Contests</NavLink>
-      <NavLink to="/extra" className="px-4 py-2">Extra Section</NavLink>
-      <NavLink to="/leaderboard" className="px-4 py-2">Leaderboard</NavLink>
-    </>
-  );
+  useEffect(() => {
+    document.querySelector("html").setAttribute("data-theme", theme);
+  }, [theme]);
 
-  return (
-    <div className="shadow-md bg-white dark:bg-gray-900">
-      <div className="container mx-auto flex justify-between items-center py-4 px-3">
-        <Link className="text-2xl font-bold">ContestHub</Link>
+  // Active link style
+  const activeStyle = ({ isActive }) =>
+    isActive
+      ? "text-[#cf0ae0] font-semibold underline underline-offset-4"
+      : "hover:text-[#a911e6d8]";
 
-        <div className="hidden md:flex items-center gap-4">
-          {navLinks}
+      const handleLinkClick = () => setMenuOpen(false);
 
-          {/* User Dropdown */}
-          <div className="relative group cursor-pointer">
-            <img
-              src={fakeUser.photoURL}
-              alt="user"
-              className="w-10 h-10 rounded-full border-2 border-blue-500"
-            />
-
-            <div className="absolute hidden group-hover:block bg-white dark:bg-gray-800 p-3 rounded shadow-lg right-0">
-              <p className="font-bold">{fakeUser.displayName}</p>
-              <Link to="/dashboard" className="block py-1">Dashboard</Link>
-              <button className="block py-1 text-red-500">Logout</button>
-            </div>
-          </div>
-        </div>
-
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-xl">
-          ☰
-        </button>
+      if (loading) {
+    return (
+      <div className="w-full p-4 text-center font-bold text-xl">
+        Loading...
       </div>
-
-      {isOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 p-3">
-          {navLinks}
+    );
+  }
+  return (
+    <div className="bg-base-200 shadow-sm  fixed top-0 right-0 left-0 z-50">
+      <div className='max-w-[1140px] mx-auto navbar px-4 md:px-10'>
+    {/* --------- Mobile Dropdown --------- */}
+        <div className="dropdown dropdown-end md:hidden">
+          
+          <div 
+          tabIndex={0} 
+          role="button" 
+          className="btn btn-ghost"
+          onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 left-0 p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li><NavLink to="/" className={activeStyle} onClick={handleLinkClick}>Home</NavLink></li>
+             <li><NavLink to="/all-contests" className={activeStyle} onClick={handleLinkClick} >All Contests</NavLink></li>
+             {/* <li><NavLink to="/extra" className={activeStyle} onClick={handleLinkClick}>Extra</NavLink></li> */}
+          <li><NavLink to="/leaderboard" className={activeStyle} onClick={handleLinkClick}>Leaderboard</NavLink></li>
+          {user && <li><NavLink to="/dashboard" className={activeStyle}  onClick={handleLinkClick}>Dashboard</NavLink></li>}
+         
+            {!user && (
+              <>
+                <li><NavLink to="/login" className={activeStyle} onClick={handleLinkClick}>Login</NavLink></li>
+              </>
+            )}
+            
+          </ul>
+          
         </div>
-      )}
+      <div className="flex-1">
+        <Link to="/" className="text-lg md:text-2xl font-bold text-accent flex items-center gap-2">
+        <img src="" alt="" className='w-10 rounded-full'/>
+        ContestHub
+        </Link>
+      </div>
+      <div className="dropdown dropdown-end md:hidden">
+          
+          <div 
+          tabIndex={0} 
+          role="button" 
+          className="btn btn-ghost"
+          onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {user && (
+            <>
+                <div className="tooltip tooltip-bottom" data-tip={user.displayName || "User"}>
+                  <img
+                    src={user.photoURL || "https://i.postimg.cc/T3R9zTny/avatar.png"}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full border border-primary md:hidden "
+                  />
+                 
+                </div>
+              
+            </>
+          )}
+          </div>
+
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-35 right-0"
+          >
+            
+          
+            {user && (
+              <>
+                <li><button onClick={logoutUser} className={activeStyle}>Logout</button></li>
+              </>
+            )}
+          </ul>
+          
+        </div>
+
+      <div className="flex-none">
+
+        {/* THEME TOGGLE */}
+                    <label className="swap swap-rotate md:hidden">          <input type="checkbox" onChange={handleThemeToggle} checked={theme === "dark"} />
+          {/* Sun Icon */}
+          <p className="text-3xl"><HiOutlineMoon /></p>
+
+        {/* Moon Icon */}
+            <p className="text-3xl"><HiMoon /></p>
+              </label>
+
+        {/* --------- Desktop Menu --------- */}
+        <ul className="menu menu-horizontal hidden md:flex gap-4 text-[16px] items-center">
+          <li><NavLink to="/" className={activeStyle} onClick={handleLinkClick}>Home</NavLink></li>
+             <li><NavLink to="/all-contests" className={activeStyle} onClick={handleLinkClick} >All Contests</NavLink></li>
+             {/* <li><NavLink to="/extra" className={activeStyle} onClick={handleLinkClick}>Extra</NavLink></li> */}
+          <li><NavLink to="/leaderboard" className={activeStyle} onClick={handleLinkClick}>Leaderboard</NavLink></li>
+          
+          
+          {!user && (
+            <>
+              <li><NavLink to="/login" className={`{activeStyle} btn btn-outline btn-secondary`}>Login</NavLink></li>
+            </>
+          )}
+          {user && <li><NavLink to="/dashboard" className={activeStyle}  onClick={handleLinkClick}>Dashboard</NavLink></li>}
+          <div className="dropdown dropdown-end">
+          
+          <div 
+          tabIndex={0} 
+          role="button" 
+          className="btn btn-ghost"
+          onClick={() => setMenuOpen(!menuOpen)}
+          >
+            
+            {user && (
+            <>
+                <div className="tooltip tooltip-bottom" data-tip={user.displayName || "User"}>
+                  <img
+                    src={user.photoURL || "https://i.postimg.cc/T3R9zTny/avatar.png"}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full border border-primary "
+                  />
+                 
+                </div>
+              
+            </>
+          )}
+          
+          </div>
+
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+          >
+          
+            {user && (
+              <>
+                <li><button onClick={logoutUser} className={activeStyle}>Logout</button></li>
+              </>
+            )}
+          </ul>
+          
+        </div>
+            {/* THEME TOGGLE */}
+                    <label className="swap swap-rotate">          <input type="checkbox" onChange={handleThemeToggle} checked={theme === "dark"} />
+          {/* Sun Icon */}
+          <p className="text-3xl"><HiOutlineMoon /></p>
+
+        {/* Moon Icon */}
+            <p className="text-3xl"><HiMoon /></p>
+              </label>
+        </ul>
+          
+        
+      </div>
+            </div>
     </div>
   );
-}
+};
+
+export default Navbar;
+
+
+
+

@@ -1,56 +1,108 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { initializeApp } from 'firebase/app'
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import axios from '../Api/axiosInstance'
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_apiKey,
-  authDomain: import.meta.env.VITE_authDomain,
-  projectId: import.meta.env.VITE_projectId,
-  storageBucket: import.meta.env.VITE_storageBucket,
-  messagingSenderId: import.meta.env.VITE_messagingSenderId,
-  appId: import.meta.env.VITE_appId,
-  measurementId: import.meta.env.VITE_measurementId,
-};
-const app = initializeApp(firebaseConfig)
-const auth = getAuth(app)
-const GoogleProvider = new GoogleAuthProvider()
+import React, { createContext, useEffect, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithPopup,
+  signOut,
+  updateProfile
+} from "firebase/auth";
+import { auth } from "../firebase/firebase.config";
+import axios from "../Api/axiosInstance";
 
-const AuthContext = createContext()
+export const AuthContext = createContext(null);
 
-export const useAuth = () => useContext(AuthContext)
+const googleProvider = new GoogleAuthProvider();
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null);       // firebase user
+  const [loading, setLoading] = useState(true); // indicates auth init
+  const [role, setRole] = useState("user");     // role from backend
 
+  // register (email/password)
+  const registerUser = async (email, password, name, photoURL) => {
+    setLoading(true);
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    // update display name / photo
+    await updateProfile(result.user, { displayName: name || "", photoURL: photoURL || "" });
+    // backend save & fetch token done in onAuthStateChanged
+    setLoading(false);
+    return result.user;
+  };
+
+  // login (email/password)
+  const loginUser = async (email, password) => {
+    setLoading(true);
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    setLoading(false);
+    return res.user;
+  };
+
+  // google login
+  const googleLogin = async () => {
+    setLoading(true);
+    const res = await signInWithPopup(auth, googleProvider);
+    // user saved via onAuthStateChanged
+    setLoading(false);
+    return res.user;
+  };
+
+  // logout
+  const logoutUser = async () => {
+    setLoading(true);
+    localStorage.removeItem("token");
+    await signOut(auth);
+    setUser(null);
+    setRole("user");
+    setLoading(false);
+  };
+
+  // Observe auth change -> save user to backend and fetch token+role
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser)
-      setLoading(false)
-      // Obtain JWT from your server (exchange Firebase uid/email for server token)
-      if (currentUser) {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser || null);
+
+      if (currentUser?.email) {
         try {
-          const tokenResp = await axios.post('/jwt', { email: currentUser.email })
-          localStorage.setItem('accessToken', tokenResp.data.token)
+          // upsert user to backend
+          await axios.post("/users", {
+            email: currentUser.email,
+            name: currentUser.displayName || "",
+            photoURL: currentUser.photoURL || ""
+          });
+
+          // get role + token
+          const resp = await axios.get(`/users/${encodeURIComponent(currentUser.email)}`);
+          if (resp?.data?.token) {
+            localStorage.setItem("token", resp.data.token);
+          }
+          setRole(resp?.data?.role || "user");
         } catch (err) {
-          console.error('JWT fetch error', err)
+          console.error("AuthContext: save/get user error", err);
         }
       } else {
-        localStorage.removeItem('accessToken')
+        localStorage.removeItem("token");
+        setRole("user");
       }
-    })
-    return () => unsub()
-  }, [])
+
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const value = {
     user,
     loading,
-    register: (email, password) => createUserWithEmailAndPassword(auth, email, password),
-    login: (email, password) => signInWithEmailAndPassword(auth, email, password),
-    loginWithGoogle: () => signInWithPopup(auth, GoogleProvider),
-    logout: () => signOut(auth)
-  }
+    role,
+    registerUser,
+    loginUser,
+    googleLogin,
+    logoutUser,
+    setRole
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

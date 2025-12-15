@@ -1,15 +1,28 @@
-import axios from 'axios'
+// src/api/axiosInstance.js
+import axios from "axios";
 
-const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
-})
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+});
 
-instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+// attach token
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// auto-logout on 401/403
+axiosInstance.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401 || err.response?.status === 403) {
+      localStorage.removeItem("token");
+      // optional: redirect to login
+      window.location.replace("/login");
+    }
+    return Promise.reject(err);
   }
-  return config
-})
+);
 
-export default instance
+export default axiosInstance;
