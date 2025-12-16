@@ -40,7 +40,7 @@ const Navbar = () => {
   }
   return (
     <div className="bg-base-200 shadow-sm  fixed top-0 right-0 left-0 z-50">
-      <div className='max-w-[1140px] mx-auto navbar px-4 md:px-10'>
+      <div className=' mx-auto navbar px-4 md:px-40'>
     {/* --------- Mobile Dropdown --------- */}
         <div className="dropdown dropdown-end md:hidden">
           

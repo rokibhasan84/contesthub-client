@@ -44,11 +44,7 @@ const DashboardLayout = () => {
                   My Winning
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/dashboard/profile" className={activeStyle}>
-                  My Profile
-                </NavLink>
-              </li>
+              
             </>
           )}
 

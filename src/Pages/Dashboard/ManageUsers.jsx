@@ -46,10 +46,11 @@ export default function ManageUsers() {
         <table className="table table-zebra w-full">
           <thead>
             <tr>
+              <th>No</th>
               <th>Name</th>
-              <th>Email</th>
+              <th className="pl-18">Email</th>
               <th>Role</th>
-              <th>Action</th>
+              <th className="pl-18">Action</th>
             </tr>
           </thead>
 

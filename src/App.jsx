@@ -82,7 +82,7 @@ function App() {
 
             {/* Creator routes */}
             <Route
-              path="add-contest"
+              path="/dashboard/add-contest"
               element={
                 <RequireRole allowed={["creator", "admin"]}>
                   <AddContest />
@@ -95,7 +95,7 @@ function App() {
 
             {/* Admin routes */}
             <Route
-              path="manage-users"
+              path="/dashboard/manage-users"
               element={
                 <RequireRole allowed={["admin"]}>
                   <ManageUsers />
@@ -104,7 +104,7 @@ function App() {
             />
 
             <Route
-              path="manage-contests"
+              path="/dashboard/manage-contests"
               element={
                 <RequireRole allowed={["admin"]}>
                   <ManageContests />

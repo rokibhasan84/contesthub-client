@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ContestCard({ contest }) {
   const navigate = useNavigate();
@@ -17,12 +17,12 @@ export default function ContestCard({ contest }) {
         Participants: {contest.participants}
       </p>
 
-      <button
+      <Link
         onClick={() => navigate(`/contest/${contest.id}`)}
-        className="bg-blue-500 text-white w-full py-2 mt-3 rounded"
+        className="btn btn-sm btn-primary mt-2"
       >
         Details
-      </button>
+      </Link>
     </div>
   );
 }

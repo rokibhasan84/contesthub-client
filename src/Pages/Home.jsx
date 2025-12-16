@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../Api/axiosInstance";
 import ContestCard from "../Components/ContestCard";
+import Banner from "../Components/Banner";
 
 export default function Home() {
   const [popularContests, setPopularContests] = useState([]);
@@ -12,13 +13,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="mt-10">
+    <div className="mt-18">
 
       {/* Banner */}
-      <div className="bg-blue-600 text-white text-center py-20 px-4">
-        <h1 className="text-4xl font-bold">Discover Creative Contests</h1>
-        <p className="text-lg mt-3">Show Creativity, Win Rewards</p>
-      </div>
+     <Banner></Banner>
 
       {/* Popular */}
       <div className="container mx-auto px-4 py-10">
