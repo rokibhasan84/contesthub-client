@@ -60,7 +60,7 @@ if (!contest.name || !contest.image || !contest.type) {
           <option value="Video Editing">Video Editing</option>
         </select>
 
-        <input name="price" type="number" placeholder="Entry Fee" className="input input-bordered w-full" required />
+        <input name="fee" type="number" placeholder="Entry Fee" className="input input-bordered w-full" required />
 
         <input name="prize" type="number" placeholder="Prize Money" className="input input-bordered w-full" required />
 

@@ -62,7 +62,8 @@ export default function AuthProvider({ children }) {
   // Observe auth change -> save user to backend and fetch token+role
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser || null);
+      setUser(currentUser);
+      setLoading(true);
 
       if (currentUser?.email) {
         try {
@@ -75,16 +76,16 @@ export default function AuthProvider({ children }) {
 
           // get role + token
           const resp = await axios.get(`/users/${encodeURIComponent(currentUser.email)}`);
-          if (resp?.data?.token) {
-            localStorage.setItem("access-token", resp.data.token);
-          }
+          
+          localStorage.setItem("token", resp?.data?.token);
+         
           setRole(resp?.data?.role || "user");
         } catch (err) {
           console.error("AuthContext: save/get user error", err);
         }
       } else {
-        localStorage.removeItem("access-token");
-        setRole(null);
+        localStorage.removeItem("token");
+        setRole("user");
       }
 
       setLoading(false);
