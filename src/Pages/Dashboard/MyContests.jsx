@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import axios from "../../Api/axiosInstance";
 import toast from "react-hot-toast";
 
+
 export default function ManageContests() {
   const [contests, setContests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
-      .get("/contests")
+      .get("/contests/my")
       .then((res) => setContests(res.data))
       .catch(() => toast.error("Failed to load contests"))
       .finally(() => setLoading(false));
@@ -16,7 +17,7 @@ export default function ManageContests() {
 
   const approveContest = async (id) => {
     try {
-      await axios.patch(`/contests/${id}/approve`);
+      await axios.patch(`/contests/my/${id}/approve`);
       setContests((prev) =>
         prev.map((c) =>
           c._id === id ? { ...c, status: "approved" } : c

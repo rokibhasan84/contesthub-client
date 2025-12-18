@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../../Context/AuthContext";
-import axios from "../../Api/axiosInstance";
+import axiosInstance from "../../Api/axiosInstance";
 import toast from "react-hot-toast";
 
 export default function AddContest() {
@@ -24,20 +24,23 @@ export default function AddContest() {
     if (!contest.creatorEmail) {
       return toast.error("You must be logged in");
     }
-
+    if (!contest.name || !contest.image || !contest.type) {
+  return toast.error("All fields are required");
+}
     try {
-  await axios.post("/contests", contest);
+      axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
   toast.success("Contest submitted for approval!");
   e.target.reset();
 } catch (err) {
   console.error(err);
   toast.error(err.response?.data?.message || "Failed to add contest");
 }
-
-if (!contest.name || !contest.image || !contest.type) {
-  return toast.error("All fields are required");
-}
-
 
   };
 

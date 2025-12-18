@@ -11,7 +11,7 @@ export default function AllContests() {
 
   const fetchContests = () => {
     axios
-      .get("/contests", {
+      .get("/contests/approved", {
         params: {
           status: "approved",
           search,

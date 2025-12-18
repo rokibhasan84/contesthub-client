@@ -8,7 +8,7 @@ const ManageContests = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/contests/pending/all", {
+      .get("http://localhost:5000/api/contests/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -18,7 +18,7 @@ const ManageContests = () => {
 
   const handleApprove = async (id) => {
     await axios.patch(
-      `http://localhost:5000/api/contests/approve/${id}`,
+      `http://localhost:5000/api/contests/${id}`,
       {},
       {
         headers: {
@@ -110,7 +110,7 @@ export default ManageContests;
 //   const [loading, setLoading] = useState(true);
 
 //   useEffect(() => {
-//     axios.get("http://localhost:5000/contests").then((res) => {
+//     axios.get("/contests").then((res) => {
 //       setContests(res.data);
 //       setLoading(false);
 //     });
@@ -118,7 +118,7 @@ export default ManageContests;
 
 //   const handleStatus = (id, status) => {
 //     axios
-//       .patch(`http://localhost:5000/contests/${id}`, { status })
+//       .patch(`/contests/${id}`, { status })
 //       .then(() => {
 //         setContests((prev) =>
 //           prev.map((contest) =>

@@ -1,4 +1,4 @@
-// src/api/axiosInstance.js
+
 import axios from "axios";
 
 const axiosInstance = axios.create({
@@ -18,11 +18,16 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401 || err.response?.status === 403) {
-      localStorage.removeItem("token");
-      // optional: redirect to login
-      window.location.replace("/login");
-    }
+    console.error(
+      "API Error:",
+      err.response?.status,
+      err.response?.data?.message || err.message
+    )
+    // if (err.response?.status === 401 || err.response?.status === 403) {
+    //   localStorage.removeItem("token");
+    //   // optional: redirect to login
+    //   window.location.replace("/login");
+    
     return Promise.reject(err);
   }
 );
