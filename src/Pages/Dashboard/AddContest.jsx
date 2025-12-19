@@ -54,6 +54,8 @@ export default function AddContest() {
           <option value="Image Design">Image Design</option>
           <option value="Article Writing">Article Writing</option>
           <option value="Video Editing">Video Editing</option>
+          <option value="Mobile Apps">Mobile Apps</option>
+          <option value="UI/UX Design">UI/UX Design</option>
         </select>
 
         <input name="fee" type="number" placeholder="Entry Fee" className="input input-bordered w-full" required />

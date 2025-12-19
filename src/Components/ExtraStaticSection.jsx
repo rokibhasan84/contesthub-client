@@ -4,7 +4,7 @@ const ExtraStaticSection = () => {
     return (
         <div>
            <section className="py-16 container mx-auto px-3">
-  <h2 className="text-2xl font-bold text-center mb-8">Why Join ContestHub?</h2>
+  <h2 className="text-2xl font-bold text-center mb-8">Why Join CompeteZone?</h2>
 
   <div className="grid md:grid-cols-3 gap-6">
     <div className="shadow p-6 rounded text-center">

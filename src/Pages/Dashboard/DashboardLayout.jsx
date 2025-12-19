@@ -90,6 +90,11 @@ const DashboardLayout = () => {
                   Manage Contests
                 </NavLink>
               </li>
+              <li>
+                <NavLink to="/dashboard/manage-all-contests" className={activeStyle}>
+                  Manage All Contests
+                </NavLink>
+              </li>
             </>
           )}
         </ul>

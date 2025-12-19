@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../../Api/axiosInstance";
 import toast from "react-hot-toast";
-
+import { Link } from "react-router-dom";
 
 export default function ManageContests() {
   const [contests, setContests] = useState([]);
@@ -15,20 +15,6 @@ export default function ManageContests() {
       .finally(() => setLoading(false));
   }, []);
 
-  const approveContest = async (id) => {
-    try {
-      await axios.patch(`/contests/my/${id}/approve`);
-      setContests((prev) =>
-        prev.map((c) =>
-          c._id === id ? { ...c, status: "approved" } : c
-        )
-      );
-      toast.success("Contest approved");
-    } catch {
-      toast.error("Approval failed");
-    }
-  };
-
   const deleteContest = async (id) => {
     if (!confirm("Are you sure?")) return;
 
@@ -41,48 +27,82 @@ export default function ManageContests() {
     }
   };
 
-  if (loading) return <p>Loading contests...</p>;
+  if (loading) return <p className="text-center">Loading...</p>;
 
   return (
-    <div>
-      <h1 className="text-2xl text-center font-bold mb-4">Manage Contests</h1>
+    <div className="px-2 md:px-0">
+      <h1 className="text-2xl text-center font-bold mb-4">
+        Manage Contests
+      </h1>
 
-      <table className="table table-zebra w-full">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Creator</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {contests.map((c) => (
-            <tr key={c._id}>
-              <td>{c.name}</td>
-              <td>{c.creatorEmail}</td>
-              <td className="capitalize">{c.status}</td>
-              <td className="flex gap-2">
-                {c.status === "pending" && (
-                  <button
-                    onClick={() => approveContest(c._id)}
-                    className="btn btn-xs btn-success"
-                  >
-                    Confirm
-                  </button>
-                )}
-                <button
-                  onClick={() => deleteContest(c._id)}
-                  className="btn btn-xs btn-error"
-                >
-                  Delete
-                </button>
-              </td>
+      {/* 🖥 Desktop Table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Creator</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {contests.map((c) => (
+              <tr key={c._id}>
+                <td>{c.name}</td>
+                <td>{c.creatorEmail}</td>
+                <td className="capitalize">{c.status}</td>
+                <td className="flex gap-2">
+                  <Link
+                    to={`/dashboard/submissions/${c._id}`}
+                    className="btn btn-xs btn-outline"
+                  >
+                    Submissions
+                  </Link>
+                  <button
+                    onClick={() => deleteContest(c._id)}
+                    className="btn btn-xs btn-error"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 📱 Mobile Cards */}
+      <div className="md:hidden space-y-4">
+        {contests.map((c) => (
+          <div
+            key={c._id}
+            className="bg-base-200 p-4 rounded shadow"
+          >
+            <p className="font-bold text-lg">{c.name}</p>
+            <p className="text-sm">Creator: {c.creatorEmail}</p>
+            <p className="capitalize">Status: {c.status}</p>
+
+            <div className="flex gap-2 mt-3">
+              <Link
+                to={`/dashboard/submissions/${c._id}`}
+                className="btn btn-sm btn-outline flex-1"
+              >
+                Submissions
+              </Link>
+              <button
+                onClick={() => deleteContest(c._id)}
+                className="btn btn-sm btn-error flex-1"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
+
+

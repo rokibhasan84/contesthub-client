@@ -4,6 +4,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { Link, NavLink } from "react-router-dom";
 import { HiMoon } from "react-icons/hi2";
 import { HiOutlineMoon } from "react-icons/hi2";
+// import logo from "../assets/logo.jpg";
 
 
 const Navbar = () => {
@@ -77,8 +78,8 @@ const Navbar = () => {
         </div>
       <div className="flex-1">
         <Link to="/" className="text-lg md:text-2xl font-bold text-accent flex items-center gap-2">
-        <img src="" alt="" className='w-10 rounded-full'/>
-        ContestHub
+        {/* <img src={logo} alt="" className='w-10 rounded-full'/> */}
+        Compete<span className="ml-[-10px] text-[#dfac07]">Zone</span>
         </Link>
       </div>
       <div className="dropdown dropdown-end md:hidden">

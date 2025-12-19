@@ -19,7 +19,7 @@ import RequireRole from "./routes/RequireRole";
 import DashboardLayout from "./Pages/Dashboard/DashboardLayout";
 import DashboardHome from "./Pages/Dashboard/DashboardHome";
 import MyParticipated from "./Pages/Dashboard/MyParticipated";
-import MyWinning from "./Pages/Dashboard/MyWinning";
+import MyWinning from "./Pages/Dashboard/WinnerContests";
 import MyProfile from "./Pages/Dashboard/MyProfile";
 import AddContest from "./Pages/Dashboard/AddContest";
 import MyContests from "./Pages/Dashboard/MyContests";
@@ -28,6 +28,8 @@ import ManageUsers from "./Pages/Dashboard/ManageUsers";
 import ManageContests from "./Pages/Dashboard/ManageContests";
 import Leaderboard from "./Pages/Leaderboard";
 import Payment from "./Pages/Payment";
+import AdminManageContests from "./Pages/Dashboard/AdminManageContests";
+import SubmissionContests from "./Pages/Dashboard/SubmissionContests";
 
 function App() {
   return (
@@ -101,6 +103,16 @@ function App() {
 
             <Route path="my-contests" element={<MyContests />} />
             <Route path="submissions" element={<Submissions />} />
+            <Route
+              path="submissions/:id"
+              element={
+                <RequireRole>
+                  <SubmissionContests />
+                </RequireRole>
+                  
+                
+              }
+            />
 
             {/* Admin routes */}
             <Route
@@ -120,7 +132,16 @@ function App() {
                 </RequireRole>
               }
             />
+            <Route
+              path="/dashboard/manage-all-contests"
+              element={
+                <RequireRole allowed={["admin"]}>
+                  <AdminManageContests />
+                </RequireRole>
+              }
+            />
           </Route>
+            
 
           {/* ===== Not Found ===== */}
           <Route path="*" element={<NotFound />} />
