@@ -23,10 +23,11 @@ import MyWinning from "./Pages/Dashboard/MyWinning";
 import MyProfile from "./Pages/Dashboard/MyProfile";
 import AddContest from "./Pages/Dashboard/AddContest";
 import MyContests from "./Pages/Dashboard/MyContests";
-import Submissions from "./Pages/Dashboard/Submissions";
+import Submissions from "./Components/SubmitTaskModal";
 import ManageUsers from "./Pages/Dashboard/ManageUsers";
 import ManageContests from "./Pages/Dashboard/ManageContests";
 import Leaderboard from "./Pages/Leaderboard";
+import Payment from "./Pages/Payment";
 
 function App() {
   return (
@@ -46,6 +47,14 @@ function App() {
             element={
               <PrivateRoute>
                 <ContestDetails />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/payment/:id"
+            element={
+              <PrivateRoute>
+                <Payment />
               </PrivateRoute>
             }
           />

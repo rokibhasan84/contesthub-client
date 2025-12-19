@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../Api/axiosInstance";
+import ContestCard from "../Components/ContestCard";
+
 
 export default function AllContests() {
   const [contests, setContests] = useState([]);
@@ -13,7 +15,6 @@ export default function AllContests() {
     axios
       .get("/contests/approved", {
         params: {
-          status: "approved",
           search,
           type,
           sort,

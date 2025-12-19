@@ -8,14 +8,13 @@ import { IoMdEyeOff } from "react-icons/io";
 const Login = () => {
   const { loginUser, googleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
-  // const location = useLocation();
-  // const from = location.state?.from?.pathname || "/";
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword]=useState(false);
 
 
   // Handle Login
+
   const handleLogin = (e) => {
     e.preventDefault();
     const form = e.target;

@@ -1,28 +1,47 @@
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function ContestCard({ contest }) {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const handleDetails = () => {
+    // If not logged in → redirect to login
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate(`/contest/${contest._id}`);
+    }
+  };
+
   return (
-    <div className="shadow rounded-lg p-3 bg-white dark:bg-gray-800">
-      <img src={contest.image} className="w-full h-48 object-cover rounded" />
+    <div className="card bg-base-100 shadow">
+       <figure>
+        <img src={contest.image} alt={contest.name} className="h-40 w-full object-cover" />
+      </figure>
 
-      <h3 className="text-xl font-bold mt-2">{contest.name}</h3>
-      <p className="text-gray-600 dark:text-gray-300">
-        {contest.description.slice(0, 60)}...
-      </p>
+      <div className="card-body">
+        <h2 className="card-title">{contest.name}</h2>
 
-      <p className="mt-2 font-semibold text-blue-500">
-        Participants: {contest.participants}
-      </p>
+        <p>
+          {contest.description.slice(0, 80)}...
+        </p>
 
-      <Link
-        onClick={() => navigate(`/contest/${contest.id}`)}
-        className="btn btn-sm btn-primary mt-2"
-      >
-        Details
-      </Link>
+        <p className="font-semibold">
+          Participants: {contest.participants.length}
+        </p>
+
+        <div className="card-actions justify-end">
+          <button
+          onClick={handleDetails}
+          className="btn btn-primary"
+        >
+          Details
+        </button>
+        </div>
+        
+      </div>
     </div>
   );
 }

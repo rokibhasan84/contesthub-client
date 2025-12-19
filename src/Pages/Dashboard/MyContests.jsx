@@ -45,7 +45,7 @@ export default function ManageContests() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Manage Contests</h1>
+      <h1 className="text-2xl text-center font-bold mb-4">Manage Contests</h1>
 
       <table className="table table-zebra w-full">
         <thead>

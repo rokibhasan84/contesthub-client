@@ -1,93 +1,94 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../Api/axiosInstance";
+import toast from "react-hot-toast";
 
 const ManageContests = () => {
   const [contests, setContests] = useState([]);
 
-  const token = localStorage.getItem("access-token");
-
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/contests/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => setContests(res.data));
+      .get("/contests/pending/all")
+      .then((res) => setContests(res.data))
+      .catch(() => toast.error("Failed to load contests"));
   }, []);
 
   const handleApprove = async (id) => {
-    await axios.patch(
-      `http://localhost:5000/api/contests/${id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    setContests(contests.filter((c) => c._id !== id));
+    try {
+      await axios.patch(`/contests/${id}/approve`);
+      setContests((prev) => prev.filter((c) => c._id !== id));
+      toast.success("Contest approved");
+    } catch {
+      toast.error("Approval failed");
+    }
   };
 
   const handleReject = async (id) => {
-    await axios.patch(
-      `http://localhost:5000/api/contests/reject/${id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    setContests(contests.filter((c) => c._id !== id));
+    try {
+      await axios.patch(`/contests/reject/${id}`);
+      setContests((prev) => prev.filter((c) => c._id !== id));
+      toast.success("Contest rejected");
+    } catch {
+      toast.error("Reject failed");
+    }
   };
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Manage Contests</h2>
+      <h2 className="text-2xl text-center font-bold mb-4">Pending Contests</h2>
 
-      <div className="overflow-x-auto">
+      {contests.length === 0 ? (
+      <div>
         <table className="table table-zebra">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Prize</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {contests.map((contest) => (
-              <tr key={contest._id}>
-                <td>{contest.title}</td>
-                <td>{contest.type}</td>
-                <td>${contest.prize}</td>
-                <td className="flex gap-2">
-                  <button
-                    onClick={() => handleApprove(contest._id)}
-                    className="btn btn-xs btn-success"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleReject(contest._id)}
-                    className="btn btn-xs btn-error"
-                  >
-                    Reject
-                  </button>
-                </td>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Prize</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {contests.length === 0 && (
-          <p className="text-center mt-6 text-gray-500">
-            No pending contests
-          </p>
-        )}
+            </thead>
+            </table>
+        <p className="text-center mt-10 text-gray-500">No pending contests</p>
       </div>
+        
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table table-zebra">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Prize</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {contests.map((contest) => (
+                <tr key={contest._id}>
+                  <td>{contest.name}</td>
+                  <td>{contest.type}</td>
+                  <td>${contest.prize}</td>
+                  <td className="flex gap-2">
+                    <button
+                      onClick={() => handleApprove(contest._id)}
+                      className="btn btn-xs btn-success"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleReject(contest._id)}
+                      className="btn btn-xs btn-error"
+                    >
+                      Reject
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
@@ -100,90 +101,3 @@ export default ManageContests;
 
 
 
-
-
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const ManageContests = () => {
-//   const [contests, setContests] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     axios.get("/contests").then((res) => {
-//       setContests(res.data);
-//       setLoading(false);
-//     });
-//   }, []);
-
-//   const handleStatus = (id, status) => {
-//     axios
-//       .patch(`/contests/${id}`, { status })
-//       .then(() => {
-//         setContests((prev) =>
-//           prev.map((contest) =>
-//             contest._id === id
-//               ? { ...contest, status }
-//               : contest
-//           )
-//         );
-//       });
-//   };
-
-//   if (loading) return <p className="text-center mt-10">Loading...</p>;
-
-//   return (
-//     <div>
-//       <h2 className="text-2xl font-bold mb-4">Manage Contests</h2>
-
-//       <div className="overflow-x-auto">
-//         <table className="table table-zebra">
-//           <thead>
-//             <tr>
-//               <th>Title</th>
-//               <th>Creator</th>
-//               <th>Prize</th>
-//               <th>Status</th>
-//               <th>Action</th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-//             {contests.map((contest) => (
-//               <tr key={contest._id}>
-//                 <td>{contest.title}</td>
-//                 <td>{contest.creatorEmail}</td>
-//                 <td>৳{contest.prizeMoney}</td>
-//                 <td>
-//                   <span
-//                     className={`font-semibold ${
-//                       contest.status === "approved"
-//                         ? "text-green-600"
-//                         : "text-orange-500"
-//                     }`}
-//                   >
-//                     {contest.status}
-//                   </span>
-//                 </td>
-//                 <td>
-//                   {contest.status === "pending" && (
-//                     <button
-//                       onClick={() =>
-//                         handleStatus(contest._id, "approved")
-//                       }
-//                       className="btn btn-xs btn-success"
-//                     >
-//                       Approve
-//                     </button>
-//                   )}
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ManageContests;
