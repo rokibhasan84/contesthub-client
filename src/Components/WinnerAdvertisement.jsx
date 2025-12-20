@@ -21,6 +21,7 @@ export default function WinnerAdvertisement() {
   if (loading) {
     return <p className="text-center py-10">Loading winners...</p>;
   }
+  
 
   return (
     <section className="py-16 bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 text-white">
@@ -49,8 +50,8 @@ export default function WinnerAdvertisement() {
     className="bg-white text-gray-800 rounded-xl shadow-lg overflow-hidden"
   >
     <img
-  src={contest.userPhoto}
-  alt={contest.userEmail}
+  src={contest.winner.photo}
+  alt={contest.winner.name}
   className="h-52 w-full object-cover"
 />
 

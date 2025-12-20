@@ -4,6 +4,7 @@ import ContestCard from "../Components/ContestCard";
 import Banner from "../Components/Banner";
 import ExtraStaticSection from "../Components/ExtraStaticSection";
 import WinnerAdvertisement from "../Components/WinnerAdvertisement";
+import { Link } from "react-router";
 
 export default function Home() {
   const [popularContests, setPopularContests] = useState([]);
@@ -28,9 +29,14 @@ export default function Home() {
             <ContestCard key={contest._id} contest={contest} />
           ))}
         </div>
+       <div className="flex justify-center mt-5">
+         <Link to="/all-contests" className="btn btn-accent btn-outline mt-4">
+          View All Contests
+        </Link>
+       </div>
       </div>
       <ExtraStaticSection></ExtraStaticSection>
-      <WinnerAdvertisement></WinnerAdvertisement>
+      {/* <WinnerAdvertisement></WinnerAdvertisement> */}
     </div>
   );
 }

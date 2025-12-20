@@ -27,6 +27,9 @@ export default function ContestCard({ contest }) {
         <p>
           {contest.description.slice(0, 80)}...
         </p>
+        <p>
+          Fee: ${contest.fee}
+        </p>
 
         <p className="font-semibold">
           Participants: {contest.participants.length}

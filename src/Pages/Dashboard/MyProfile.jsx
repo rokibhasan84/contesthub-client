@@ -1,14 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import { updateProfile} from "firebase/auth";
 import { auth } from '../../firebase/firebase.config';
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router";
+import axios from "../../Api/axiosInstance";
+import WinPercentageChart from "../../Components/WinPercentageChart";
 
 const Profile = () => {
   const { user } = useContext(AuthContext);
   const [name, setName] = useState(user?.displayName || "");
   const [photo, setPhoto] = useState(user?.photoURL || "");
+
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get("/contests/stats")
+      .then(res => {
+        setStats(res.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <p className="text-center mt-20">Loading...</p>;
+
 
   const handleUpdateProfile = async () => {
     
@@ -75,6 +92,12 @@ const Profile = () => {
 
           
         </div>
+      </div>
+      <div className="mt-10 w-full max-w-md p-6 rounded-xl shadow-lg bg-base-200">
+        <WinPercentageChart
+      won={stats?.won || 0} 
+      participated={stats?.participated || 0}>
+      </WinPercentageChart>
       </div>
     </div>
   );

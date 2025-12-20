@@ -113,7 +113,8 @@ const Navbar = () => {
           
             {user && (
               <>
-                <li><button onClick={logoutUser} className={activeStyle}>Logout</button></li>
+              <li className={`${activeStyle} font-bold my-2`}>{user.displayName}</li>
+                <button onClick={logoutUser} className={activeStyle}>Logout</button>
               </>
             )}
           </ul>
@@ -177,7 +178,7 @@ const Navbar = () => {
           
             {user && (
               <>
-              <li className={activeStyle}>{user.displayName}</li>
+              <li className={`${activeStyle} font-bold my-2`}>{user.displayName}</li>
                 <li><button onClick={logoutUser} className={activeStyle}>Logout</button></li>
               </>
             )}

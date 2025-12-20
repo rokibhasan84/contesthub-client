@@ -35,6 +35,14 @@ export default function ContestDetails() {
       <p className="mt-2 font-semibold">
         Prize: ${contest.prize}
       </p>
+      {
+        (<>
+        <p className="mt-2">
+          Deadline: {new Date(contest.deadline).toLocaleString()}
+        </p>
+      </>)
+      }
+
 
       {contest.winner?.email && (
         <div className="mt-4 p-4 bg-green-100 rounded">
@@ -57,7 +65,7 @@ export default function ContestDetails() {
           <button
             disabled={isEnded}
             onClick={() => navigate(`/payment/${contest._id}`)}
-            className="btn btn-primary"
+            className="btn btn-primary mb-7"
           >
             Register / Pay
           </button>
@@ -67,7 +75,7 @@ export default function ContestDetails() {
           <button
             disabled={isEnded}
             onClick={() => setOpen(true)}
-            className="btn btn-success"
+            className="btn btn-success mb-7"
           >
             Submit Task
           </button>
