@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "../Api/axiosInstance";
 import ContestCard from "../Components/ContestCard";
 import Banner from "../Components/Banner";
+import ExtraStaticSection from "../Components/ExtraStaticSection";
+import WinnerAdvertisement from "../Components/WinnerAdvertisement";
 
 export default function Home() {
   const [popularContests, setPopularContests] = useState([]);
@@ -27,6 +29,8 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <ExtraStaticSection></ExtraStaticSection>
+      <WinnerAdvertisement></WinnerAdvertisement>
     </div>
   );
 }

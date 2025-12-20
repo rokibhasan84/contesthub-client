@@ -50,8 +50,16 @@ export default function SubmissionContests() {
           key={i}
           className="p-4 mb-3 shadow rounded bg-white dark:bg-gray-800"
         >
-          <p><strong>User Name:</strong> {s.userEmail.split("@")[0]}</p>
+          <div className="mb-2 flex items-center gap-3">
+            <img
+              src={s.userPhoto}
+              alt={s.userName}
+              className="w-10 h-10 rounded-full"
+            />
+            <h2 className="text-lg font-semibold">{s.userName}</h2>
+          </div>
           <p><strong>User Email:</strong> {s.userEmail}</p>
+          
 
           <a
             href={s.taskLink}

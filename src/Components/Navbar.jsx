@@ -27,8 +27,8 @@ const Navbar = () => {
   // Active link style
   const activeStyle = ({ isActive }) =>
     isActive
-      ? "text-[#cf0ae0] font-semibold underline underline-offset-4"
-      : "hover:text-[#a911e6d8]";
+      ? "text-[#dfac07] font-semibold underline underline-offset-4"
+      : "hover:text-accent font-semibold";
 
       const handleLinkClick = () => setMenuOpen(false);
 
@@ -177,6 +177,7 @@ const Navbar = () => {
           
             {user && (
               <>
+              <li className={activeStyle}>{user.displayName}</li>
                 <li><button onClick={logoutUser} className={activeStyle}>Logout</button></li>
               </>
             )}

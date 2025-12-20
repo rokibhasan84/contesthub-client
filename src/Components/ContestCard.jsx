@@ -16,7 +16,7 @@ export default function ContestCard({ contest }) {
   };
 
   return (
-    <div className="card bg-base-100 shadow">
+    <div className="card bg-base-200 shadow">
        <figure>
         <img src={contest.image} alt={contest.name} className="h-40 w-full object-cover" />
       </figure>
@@ -35,7 +35,7 @@ export default function ContestCard({ contest }) {
         <div className="card-actions justify-end">
           <button
           onClick={handleDetails}
-          className="btn btn-primary"
+          className="btn btn-accent btn-outline"
         >
           Details
         </button>
