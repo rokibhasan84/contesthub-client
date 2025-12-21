@@ -65,19 +65,12 @@ export default function WinnerAdvertisement() {
 
                 <div className="flex justify-center items-center gap-2 mt-3 text-indigo-600 font-bold">
                   <Sparkles size={18} />
-                  ৳ {contest.winner?.prize}
+                  ৳ {contest.prize}
                 </div>
-
-                <p className="text-xs text-gray-400 mt-2">
-                  {contest.winner?.date
-                    ? new Date(contest.winner.date).toLocaleDateString()
-                    : ""}
-                </p>
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
