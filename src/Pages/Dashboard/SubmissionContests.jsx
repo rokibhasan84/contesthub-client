@@ -11,10 +11,9 @@ export default function SubmissionContests() {
   useEffect(() => {
     axios.get(`/contests/${id}`).then(res => setContest(res.data));
 
-    axios
-      .get(`/contests/submissions/${id}`)
-      .then(res => setSubs(res.data))
-      .catch(() => toast.error("Failed to load submissions"));
+    axios.get(`/submissions/${id}`).then((res) => {
+      setSubs(res.data);
+    }).catch(() => toast.error("Failed to load submissions"));
   }, [id]);
 
   const declareWinner = async (sub) => {
@@ -38,47 +37,42 @@ export default function SubmissionContests() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">
-        Submissions — {contest.name}
+      All Submissions — {contest.name}
       </h1>
 
       {subs.length === 0 && (
         <p className="text-gray-500">No submissions yet</p>
       )}
 
-      {subs.map((s, i) => (
-        <div
-          key={i}
-          className="p-4 mb-3 shadow rounded bg-white dark:bg-gray-800"
-        >
-          <div className="mb-2 flex items-center gap-3">
+      {subs.map((sub) => (
+        <div key={sub._id} className="p-4 mb-3 rounded bg-base-200">
+          <div className="flex items-center gap-3 mb-2">
             <img
-              src={s.userPhoto}
-              alt={s.userName}
+              src={sub.userPhoto}
               className="w-10 h-10 rounded-full"
             />
-            <h2 className="text-lg font-semibold">{s.userName}</h2>
+            <span className="font-semibold">{sub.userName}</span>
           </div>
-          <p><strong>User Email:</strong> {s.userEmail}</p>
-          
 
           <a
-            href={s.taskLink}
+            href={sub.taskLink}
             target="_blank"
+            rel="noreferrer"
             className="text-blue-600 underline"
           >
-            View Task
+            View Submitted Task
           </a>
 
           {!contest.winner?.email && (
             <button
-              onClick={() => declareWinner(s)}
+              onClick={() => declareWinner(sub)}
               className="btn btn-sm btn-success ml-15 mt-3"
             >
               Declare Winner
             </button>
           )}
 
-          {contest.winner?.email === s.userEmail && (
+          {contest.winner?.email === sub.userEmail && (
             <p className="text-green-600 font-bold mt-3">
               🏆 Winner
             </p>
