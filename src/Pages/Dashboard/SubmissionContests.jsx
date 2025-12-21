@@ -19,18 +19,19 @@ export default function SubmissionContests() {
   const declareWinner = async (sub) => {
     if (!confirm("Declare this user as winner?")) return;
 
-    try {
-      await axios.patch(`/contests/winner/${id}`, {
-        email: sub.userEmail,
-        name: sub.userEmail.split("@")[0], // simple fallback
-        photo: "https://i.ibb.co/ZmYz7jF/avatar.png"
-      });
+     try {
+    await axios.patch(`/contests/winner/${id}`, {
+      email: sub.userEmail,
+      name: sub.userName,
+      photo: sub.userPhoto
+    });
 
-      toast.success("Winner declared");
-    } catch {
-      toast.error("Failed to declare winner");
-    }
-  };
+    toast.success("Winner declared");
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to declare winner");
+  }
+};
 
   if (!contest) return null;
 

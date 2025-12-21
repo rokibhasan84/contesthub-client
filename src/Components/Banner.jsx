@@ -7,7 +7,7 @@ const Banner = () => {
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    // backend পরে আসবে
+    
     navigate(`/all-contests?search=${search}&type=${type}`);
   };
 
@@ -41,10 +41,11 @@ const Banner = () => {
             onChange={(e) => setType(e.target.value)}
           >
             <option value="">All Types</option>
-            <option value="coding">Coding</option>
-            <option value="design">Design</option>
-            <option value="writing">Writing</option>
-            <option value="photography">Photography</option>
+            <option value="Image Design">Image Design</option>
+          <option value="Article Writing">Article Writing</option>
+          <option value="Video Editing">Video Editing</option>
+          <option value="Mobile Apps">Mobile Apps</option>
+          <option value="UI/UX Design">UI/UX Design</option>
           </select>
 
           <button

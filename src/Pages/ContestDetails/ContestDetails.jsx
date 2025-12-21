@@ -22,7 +22,7 @@ export default function ContestDetails() {
   const isRegistered = contest.participants.includes(user?.email);
 
   return (
-    <div className="mt-20 max-w-4xl mx-auto">
+    <div className="mt-25 max-w-2xl mx-auto">
       <img src={contest.image} className="w-full rounded mb-6" />
 
       <h1 className="text-3xl font-bold">{contest.name}</h1>
